@@ -4,9 +4,25 @@ const bodyParser = require('body-parser');
 const https = require('https');
 const admin = require('firebase-admin');
 require('dotenv').config();
-
+const path = require('path');
+const compression = require('compression');
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+// Enable gzip/deflate compression for responses
+app.use(compression());
+
+// Serve frontend build (if present) with long cache lifetimes for fingerprinted assets
+const buildPath = path.join(__dirname, '..', 'build');
+app.use(express.static(buildPath, {
+    maxAge: '1y',
+    setHeaders: (res, filePath) => {
+        if (filePath.endsWith('.html')) {
+            // HTML should not be aggressively cached
+            res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate');
+        }
+    }
+}));
 
 // Initialize Firebase Admin
 try {
