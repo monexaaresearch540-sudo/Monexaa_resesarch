@@ -25,21 +25,21 @@ const Footer = () => {
     company: [
       { name: 'About Us', path: '/aboutUs' },
       { name: 'Blogs', path: '/blogs' },
-      { name: 'Market News', path: '/marketNews' },
-      { name: 'Contact Us', path: '/contactUs' },
+      { name: 'Market News', path: '/market-news' },
+      { name: 'Contact Us', path: '/contact-us' },
     ],
     services: [
-      { name: 'Rapid Index', path: '/rapidIndex' },
-      { name: 'Rapid Option', path: '/rapidOption' },
-      { name: 'Cash Positional', path: '/cashPositional' },
-      { name: 'Stock Future', path: '/stockFuture' },
-      { name: 'Elite Combo', path: '/eliteCombo' },
+      { name: 'Rapid Index', path: '/rapid-index' },
+      { name: 'Rapid Option', path: '/rapid-option' },
+      { name: 'Cash Positional', path: '/cash-positional' },
+      { name: 'Stock Future', path: '/stock-future' },
+      { name: 'Elite Combo', path: '/elite-combo' },
     ],
     legal: [
-      { name: 'Terms & Conditions', path: '/termsAndConditions' },
-      { name: 'Privacy Policy', path: '/privacyPolicy' },
+      { name: 'Terms & Conditions', path: '/terms-and-conditions' },
+      { name: 'Privacy Policy', path: '/privacy-policy' },
       { name: 'Disclaimer', path: '/disclaimer' },
-      { name: 'Refund Policy', path: '/refundPolicy' },
+      { name: 'Refund Policy', path: '/refund-policy' },
       { name: 'Disclosure', path: '/disclosure' },
     ],
   };
@@ -138,7 +138,7 @@ const Footer = () => {
 
         {/* SEBI Details Section */}
         <div className="mt-12 border-t pt-8 border-white overflow-x-auto">
-          <h3 className="text-lg font-semibold text-gray-200">SEBI Registered Research Analyst</h3>
+          <h3 className="text-lg font-semibold text-gray-200">SEBI Registered Investment Adviser</h3>
           <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-4 text-sm text-white">
             <p><strong className="font-medium text-white">Registration No:</strong> INH000020387</p>
             <p><strong className="font-medium text-white">Registered Name:</strong> Monnexaa Research Private Limited</p>
@@ -148,7 +148,18 @@ const Footer = () => {
             <p><strong className="font-medium text-white">BSE Enlistment No:</strong> 6554</p>
             <p><strong className="font-medium text-white">Validity:</strong> 08-May-2025 to Perpetual</p>
           </div>
-          <p className="mt-4 text-xs text-white">
+
+          <div className="mt-6 pt-4 border-t border-white/10">
+            <h4 className="text-base font-semibold text-gray-200 mb-2">SEBI Office Details:</h4>
+            <p className="text-sm text-white leading-relaxed">
+              Securities and Exchange Board of India, SEBI Bhavan. Plot No. C4-A, ‘G’ Block, Bandra-Kurla Complex, Bandra (E), Mumbai – 400051.
+            </p>
+            <p className="text-sm text-white mt-1">
+              <strong className="font-medium">Toll Free:</strong> 1800 22 7575
+            </p>
+          </div>
+
+          <p className="mt-6 text-xs text-white opacity-80">
             <strong className="font-medium text-white">Disclaimer:</strong> Investments in securities market are subject to market risks. Read all the related documents carefully before investing.
           </p>
         </div>

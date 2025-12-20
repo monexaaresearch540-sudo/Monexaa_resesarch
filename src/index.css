@@ -5,10 +5,16 @@
 
 @tailwind utilities;
 
+:root {
+  --min-font: 14px;
+  --max-font: 18px;
+}
+
 html,
 :host {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
+  font-size: clamp(var(--min-font), 1.6vw, var(--max-font));
 }
 
 body {
@@ -17,7 +23,9 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   /* Global background requested: #89C0FF */
-  background-color: #FFF4E9;
+  background-color: #ffffff;
+  font-size: 1rem; /* base font scales with html font-size */
+  line-height: 1.5;
   color: #0b2540; /* dark text for contrast against the light blue background */
 }
 
@@ -39,6 +47,57 @@ footer {
   background: transparent; /* footer component controls its own background */
   position: relative; /* keep footer in document flow to avoid overlap */
   z-index: 10;
+}
+
+/* Responsive layout and fluid type */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  box-sizing: border-box;
+}
+
+/* Fluid typography for headings and base text */
+h1 { font-size: clamp(1.6rem, 3.6vw, 2.6rem); line-height: 1.12; margin: 0 0 0.5rem 0; }
+h2 { font-size: clamp(1.4rem, 2.8vw, 2.0rem); line-height: 1.15; margin: 0 0 0.5rem 0; }
+h3 { font-size: clamp(1.2rem, 2.2vw, 1.6rem); line-height: 1.2; margin: 0 0 0.5rem 0; }
+p, li, .text {
+  font-size: clamp(0.95rem, 1.2vw, 1.125rem);
+  margin: 0 0 0.75rem 0;
+}
+
+/* Make media elements responsive */
+img, video, iframe {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Small SEBI-style disclaimer styling */
+.disclaimer {
+  font-size: clamp(0.72rem, 1.0vw, 0.95rem);
+  color: #6b7280; /* subtle gray */
+  margin-top: 0.25rem;
+}
+
+/* Header logo mark and responsive text logo */
+.logo-mark {
+  width: 40px;
+  height: 40px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 9999px;
+  box-shadow: 0 4px 12px rgba(15,118,110,0.12);
+}
+
+.site-title { font-family: 'Marcellus', serif; }
+
+@media (min-width: 640px) {
+  .logo-mark { width: 48px; height: 48px; }
+}
+@media (min-width: 1024px) {
+  .logo-mark { width: 56px; height: 56px; }
 }
 
 /* Designer badge animation for footer credit */

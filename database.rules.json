@@ -1,0 +1,72 @@
+{
+  "rules": {
+    "admins": {
+      ".read": "auth != null",
+      ".write": "!root.child('admins').exists()"
+    },
+    "contact_submissions": {
+      ".read": "root.child('admins').child(auth.uid).exists() || auth.token.email == 'monexaaresearch540@gmail.com'",
+      ".write": true,
+      "$submissionId": {
+        ".validate": "newData.hasChildren(['name','mobile','message','submittedAt']) &&\n                       newData.child('name').isString() &&\n                       newData.child('mobile').isString() &&\n                       newData.child('message').isString() &&\n                       newData.child('submittedAt').isString()"
+      }
+    },
+    "contact_inquiries": {
+      ".read": "root.child('admins').child(auth.uid).exists() || auth.token.email == 'monexaaresearch540@gmail.com'",
+      ".write": true
+    },
+    "client_information_submissions": {
+      ".read": "root.child('admins').child(auth.uid).exists() && auth.token.email != 'monexaaresearch540@gmail.com'",
+      ".write": false,
+      "$submissionId": {
+        ".validate": "newData.hasChildren(['clientName','fatherName','mobile','email','dob','pan','address','timestamp','submittedAt','status']) &&\n                       newData.child('clientName').isString() &&\n                       newData.child('fatherName').isString() &&\n                       newData.child('mobile').isString() &&\n                       newData.child('email').isString() &&\n                       newData.child('dob').isString() &&\n                       newData.child('pan').isString() &&\n                       newData.child('address').isString() &&\n                       newData.child('timestamp').isNumber() &&\n                       newData.child('submittedAt').isString() &&\n                       newData.child('status').isString()"
+      }
+    },
+    "complaints": {
+      ".read": "root.child('admins').child(auth.uid).exists() || auth.token.email == 'monexaaresearch540@gmail.com'",
+      ".write": true,
+      "$complaintId": {
+        ".validate": "newData.hasChildren(['name', 'mobile', 'complaintType', 'description', 'timestamp'])"
+      }
+    },
+    "complaintsDataCurrentMonth": {
+      ".read": true,
+      ".write": "root.child('admins').child(auth.uid).exists() || auth.token.email == 'monexaaresearch540@gmail.com'"
+    },
+    "monthlyDisposalTableData": {
+      ".read": true,
+      ".write": "root.child('admins').child(auth.uid).exists() || auth.token.email == 'monexaaresearch540@gmail.com'"
+    },
+    "annualDisposalTableData": {
+      ".read": true,
+      ".write": "root.child('admins').child(auth.uid).exists() || auth.token.email == 'monexaaresearch540@gmail.com'"
+    },
+    "complaintHeaderMonthYear": {
+      ".read": true,
+      ".write": "root.child('admins').child(auth.uid).exists() || auth.token.email == 'monexaaresearch540@gmail.com'"
+    },
+    "paymentQRCodes": {
+      ".read": true,
+      ".write": false
+    },
+    "jobs": {
+      ".read": true,
+      ".write": "root.child('admins').child(auth.uid).exists() || auth.token.email == 'monexaaresearch540@gmail.com'"
+    },
+    "job_applications": {
+      ".read": "root.child('admins').child(auth.uid).exists() || auth.token.email == 'monexaaresearch540@gmail.com'",
+      ".write": true
+    },
+    "accessibility_feedback": {
+      ".read": "root.child('admins').child(auth.uid).exists() || auth.token.email == 'monexaaresearch540@gmail.com'",
+      ".write": true,
+      "$feedbackId": {
+        ".validate": "newData.hasChildren(['name', 'email', 'issueType', 'description', 'submittedAt'])"
+      }
+    },
+    "reports": {
+      ".read": true,
+      ".write": "root.child('admins').child(auth.uid).exists() || auth.token.email == 'monexaaresearch540@gmail.com'"
+    }
+  }
+}

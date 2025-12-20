@@ -1,0 +1,5 @@
+User-agent: *
+Disallow:
+
+Sitemap: https://www.monexaa.com/sitemap.xml
+Host: https://www.monexaa.com

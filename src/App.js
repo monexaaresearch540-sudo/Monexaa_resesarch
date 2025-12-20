@@ -1,4 +1,4 @@
-import React, { useMemo, useRef } from 'react';
+import React from 'react';
 import { createBrowserRouter, RouterProvider, createRoutesFromElements, Route, Outlet } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
@@ -28,76 +28,116 @@ import ContactUs from './pages/contactUs';
 import MarketReports from './pages/reports';
 import ComplaintPage from './pages/complaintData';
 import OurServices from './components/OurServices';
+import FloatingButtons from './components/FloatingButtons';
+import SideActionButtons from './components/SideActionButtons';
+import RefundPolicy from './pages/refundPolicy';
+import PrivacyPolicy from './pages/privacyPolicy';
+import Disclaimer from './pages/disclaimer';
+import TermsAndConditions from './pages/termsAndConditions';
+import Disclosure from './pages/disclosure';
+import Jobs from './pages/jobs';
+import KycDocument from './pages/kycDocument';
+import InvestorHandbook from './pages/investorHandbook';
+import ComplaintBox from './pages/complaintBox';
+import FAQs from './pages/faqs';
+import AdminLogin from './pages/adminLogin';
+import AdminDashboard from './pages/adminDashboard';
+import AdminSetup from './pages/adminSetup';
+import ScrollToTop from './components/ScrollToTop';
+
+const Layout = () => (
+  <div className="app min-h-screen flex flex-col">
+    <ScrollToTop />
+    <Header />
+    <main className="flex-1">
+      <div className="container">
+        <Outlet />
+      </div>
+    </main>
+    <FloatingButtons />
+    <SideActionButtons />
+    <Footer />
+  </div>
+);
+
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route path="/" element={<Layout />}>
+      <Route index element={<Home />} />
+      <Route path="aboutUs" element={<AboutUs />} />
+      <Route path="vision" element={<Vision />} />
+
+      {/* Services overview page */}
+      <Route path="services" element={<OurServices />} />
+
+      {/* Services - Flattened to match Header */}
+      <Route path="cash-positional" element={<CashPositional />} />
+      <Route path="elite-combo" element={<EliteCombo />} />
+      <Route path="equity-platinum" element={<EquityPlatniam />} />
+      <Route path="option-btst" element={<OptionBtst />} />
+      <Route path="rapid-index" element={<RapidIndex />} />
+      <Route path="rapid-option" element={<RapidOption />} />
+      <Route path="stock-future" element={<StockFuture />} />
+      <Route path="stock-option" element={<StockOption />} />
+
+      {/* Company Pages */}
+      <Route path="refund-policy" element={<RefundPolicy />} />
+      <Route path="privacy-policy" element={<PrivacyPolicy />} />
+      <Route path="disclaimer" element={<Disclaimer />} />
+      <Route path="terms-and-conditions" element={<TermsAndConditions />} />
+      <Route path="disclosure" element={<Disclosure />} />
+
+      {/* Insights */}
+      <Route path="blogs" element={<Blogs />} />
+      <Route path="market-news" element={<MarketNews />} />
+      <Route path="complaint-board" element={<ComplaintData />} />
+      <Route path="grievance-redressal" element={<GrievanceRedressal />} />
+
+      {/* Accessibility */}
+      <Route path="accessibility-statement" element={<AccessibilityStatement />} />
+      <Route path="accessibility-feedback" element={<AccessibilityFeedback />} />
+      <Route path="accessibility-media" element={<AccessibilityMedia />} />
+
+      {/* Dashboard */}
+      <Route path="kyc-document" element={<KycDocument />} />
+      <Route path="investor-handbook" element={<InvestorHandbook />} />
+      <Route path="anti-money-laundering" element={<AntiMoneyLaundering />} />
+
+      {/* Other Links */}
+      <Route path="jobs" element={<Jobs />} />
+      <Route path="payment" element={<Payment />} />
+      <Route path="complaint-box" element={<ComplaintBox />} />
+      <Route path="research-reports" element={<MarketReports />} />
+      <Route path="e-sign-consent" element={<ClientServiceConsentForm />} />
+      <Route path="contact-us" element={<ContactUs />} />
+      <Route path="faqs" element={<FAQs />} />
+      
+      {/* Admin */}
+      <Route path="admin/login" element={<AdminLogin />} />
+      <Route path="admin/dashboard" element={<AdminDashboard />} />
+      <Route path="admin/setup" element={<AdminSetup />} />
+
+      {/* Legacy/Unused but kept just in case */}
+      <Route path="investor-chart" element={<InvestorChart />} />
+      <Route path="complaint" element={<ComplaintPage />} />
+
+      {/* Fallback to Home for unknown routes */}
+      <Route path="*" element={<Home />} />
+    </Route>
+  ),
+  {
+    future: {
+      v7_relativeSplatPath: true,
+      v7_startTransition: true,
+      v7_fetcherPersist: true,
+      v7_normalizeFormMethod: true,
+      v7_partialHydration: true,
+      v7_skipActionErrorRevalidation: true
+    }
+  }
+);
 
 export default function App() {
-  const Layout = () => (
-    <div className="app min-h-screen flex flex-col">
-      <Header />
-      <main className="flex-1">
-        <div className="container">
-          <Outlet />
-        </div>
-      </main>
-      <Footer />
-    </div>
-  );
-
-  const renderCount = useRef(0);
-  renderCount.current += 1;
-  // Temporary debug log to detect repeated renders causing stack overflow
-  if (renderCount.current % 50 === 0) {
-    // log every 50 renders to avoid spamming
-    // eslint-disable-next-line no-console
-    console.warn('App render count:', renderCount.current);
-  }
-
-  const router = useMemo(() => createBrowserRouter(
-    createRoutesFromElements(
-      <Route path="/" element={<Layout />}>
-        <Route index element={<Home />} />
-        <Route path="about" element={<AboutUs />} />
-        <Route path="vision" element={<Vision />} />
-
-        {/* Services overview page */}
-        <Route path="services" element={<OurServices />} />
-
-        <Route path="services/cash-positional" element={<CashPositional />} />
-        <Route path="services/elite-combo" element={<EliteCombo />} />
-        <Route path="services/equity-platniam" element={<EquityPlatniam />} />
-        <Route path="services/option-btst" element={<OptionBtst />} />
-        <Route path="services/rapid-index" element={<RapidIndex />} />
-        <Route path="services/rapid-option" element={<RapidOption />} />
-        <Route path="services/stock-future" element={<StockFuture />} />
-        <Route path="services/stock-option" element={<StockOption />} />
-
-        <Route path="blogs" element={<Blogs />} />
-        <Route path="market-news" element={<MarketNews />} />
-        <Route path="complaint-data" element={<ComplaintData />} />
-        <Route path="grievance-redressal" element={<GrievanceRedressal />} />
-
-        <Route path="accessibility-statement" element={<AccessibilityStatement />} />
-        <Route path="accessibility-feedback" element={<AccessibilityFeedback />} />
-        <Route path="accessibility-media" element={<AccessibilityMedia />} />
-
-        <Route path="investor-chart" element={<InvestorChart />} />
-        <Route path="anti-money-laundering" element={<AntiMoneyLaundering />} />
-        <Route path="consent-form" element={<ClientServiceConsentForm />} />
-
-        <Route path="payment" element={<Payment />} />
-        <Route path="contact" element={<ContactUs />} />
-        <Route path="reports" element={<MarketReports />} />
-        <Route path="complaint" element={<ComplaintPage />} />
-
-        {/* Fallback to Home for unknown routes */}
-        <Route path="*" element={<Home />} />
-      </Route>
-    ),
-    {
-      future: {
-        v7_relativeSplatPath: true
-      }
-    }
-  ), []);
-
   return <RouterProvider router={router} />;
 }
+

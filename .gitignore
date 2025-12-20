@@ -1,11 +1,7 @@
 node_modules/
-<<<<<<< HEAD
-.env
-*.log
-serviceAccountKey.json
-=======
 build/
 .env
 .DS_Store
 npm-debug.log
->>>>>>> b91717e (first commit)
+
+src/assest/video/*.mp4

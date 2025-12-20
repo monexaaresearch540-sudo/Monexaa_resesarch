@@ -5,19 +5,19 @@ import { SiAirtable, SiGoogleanalytics } from 'react-icons/si';
 
 // List of services with route paths that match App.js routes
 const services = [
-  { id: 'cash-positional', title: 'Cash Positional', desc: 'Long term positional ideas for cash market', icon: FaMoneyCheckAlt, path: '/services/cash-positional' },
-  { id: 'elite-combo', title: 'Elite Combo', desc: 'Curated combos for advanced traders', icon: FaBullseye, path: '/services/elite-combo' },
-  { id: 'equity-platniam', title: 'Equity Platinum', desc: 'Premium equity research & recommendations', icon: FaChartLine, path: '/services/equity-platniam' },
-  { id: 'option-btst', title: 'Option BTST', desc: 'Buy Today Sell Tomorrow option strategies', icon: SiAirtable, path: '/services/option-btst' },
-  { id: 'rapid-index', title: 'Rapid Index', desc: 'Fast intraday index signals', icon: FaChartPie, path: '/services/rapid-index' },
-  { id: 'rapid-option', title: 'Rapid Option', desc: 'Quick option setups for intraday', icon: SiGoogleanalytics, path: '/services/rapid-option' },
-  { id: 'stock-future', title: 'Stock Future', desc: 'High-conviction futures trades', icon: FaHandshake, path: '/services/stock-future' },
-  { id: 'stock-option', title: 'Stock Option', desc: 'Stock-specific option ideas', icon: FaBookOpen, path: '/services/stock-option' },
+  { id: 'cash-positional', title: 'Cash Positional', desc: 'Long term positional ideas for cash market', icon: FaMoneyCheckAlt, path: '/cash-positional' },
+  { id: 'elite-combo', title: 'Elite Combo', desc: 'Curated combos for advanced traders', icon: FaBullseye, path: '/elite-combo' },
+  { id: 'equity-platniam', title: 'Equity Platinum', desc: 'Premium equity research & recommendations', icon: FaChartLine, path: '/equity-platinum' },
+  { id: 'option-btst', title: 'Option BTST', desc: 'Buy Today Sell Tomorrow option strategies', icon: SiAirtable, path: '/option-btst' },
+  { id: 'rapid-index', title: 'Rapid Index', desc: 'Fast intraday index signals', icon: FaChartPie, path: '/rapid-index' },
+  { id: 'rapid-option', title: 'Rapid Option', desc: 'Quick option setups for intraday', icon: SiGoogleanalytics, path: '/rapid-option' },
+  { id: 'stock-future', title: 'Stock Future', desc: 'High-conviction futures trades', icon: FaHandshake, path: '/stock-future' },
+  { id: 'stock-option', title: 'Stock Option', desc: 'Stock-specific option ideas', icon: FaBookOpen, path: '/stock-option' },
 ];
 
 export default function OurServices() {
   return (
-    <div style={styles.page}>
+    <div id="services" style={styles.page}>
       <h1 style={styles.heading} className="animate-heading-loop">"Our Services"</h1>
       <div style={styles.headingUnderline} aria-hidden="true" />
       <p style={styles.lead}>Explore our services — click any card to go to the full details page.</p>
@@ -46,7 +46,7 @@ export default function OurServices() {
 
 const styles = {
   page: {
-    padding: '16px',
+    padding: 'clamp(16px, 5vw, 24px)',
     maxWidth: 1100,
     margin: '0 auto',
   },
@@ -74,7 +74,7 @@ const styles = {
   },
   grid: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
     gap: 16,
   },
   cardLink: {

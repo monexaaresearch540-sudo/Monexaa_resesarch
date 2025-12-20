@@ -1,23 +1,4 @@
 {
-<<<<<<< HEAD
-  "name": "monexaa-server",
-  "version": "1.0.0",
-  "description": "Backend server for Monexaa Research",
-  "main": "server.js",
-  "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js"
-  },
-  "dependencies": {
-    "body-parser": "^1.20.2",
-    "cors": "^2.8.5",
-    "dotenv": "^16.3.1",
-    "express": "^4.18.2",
-    "firebase-admin": "^13.6.0"
-  },
-  "devDependencies": {
-    "nodemon": "^3.0.1"
-=======
   "name": "monexaa-react-app",
   "version": "0.1.0",
   "private": true,
@@ -29,13 +10,17 @@
     "devtools": "npx react-devtools"
   },
   "dependencies": {
+    "aos": "^2.3.4",
     "firebase": "^12.6.0",
     "framer-motion": "^12.23.24",
+    "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-helmet-async": "^2.0.5",
     "react-icons": "^4.12.0",
     "react-router-dom": "^6.14.1",
-    "react-scripts": "^5.0.1"
+    "react-scripts": "^5.0.1",
+    "react-toastify": "^11.0.5"
   },
   "browserslist": {
     "production": [
@@ -53,6 +38,5 @@
     "autoprefixer": "^10.4.22",
     "postcss": "^8.5.6",
     "tailwindcss": "^3.4.14"
->>>>>>> b91717e (first commit)
   }
 }

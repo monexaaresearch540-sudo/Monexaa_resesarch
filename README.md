@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# Monexaa_resesarch
-=======
 # Monexaa React App
 
 A minimal React (JavaScript) scaffold created for you.
@@ -19,4 +16,3 @@ Notes:
   - `pages/home.js` — home page
   - `components/Header.js` — header component
   - `components/Footer.js` — footer component
->>>>>>> b91717e (first commit)

@@ -1,5 +1,5 @@
 {
-  "sebi_description": "SEBI पंजीकृत रिसर्च हाउस जो समय पर मार्केट इनसाइट और रिपोर्ट प्रदान करता है।",
+  "sebi_description": "SEBI पंजीकृत निवेश सलाहकार जो समय पर मार्केट इनसाइट और रिपोर्ट प्रदान करता है।",
   "section": {
     "company": "कंपनी",
     "services": "सेवाएँ",
@@ -27,7 +27,7 @@
   "address_line": "261, PU-4, Plot No. 26, Scheme No. 54, Indore, Madhya Pradesh – 452010",
   "support_email": "support@monexaaresearch.com",
   "phone": "+91 6232678136",
-  "sebi_title": "SEBI पंजीकृत रिसर्च एनालिस्ट",
+  "sebi_title": "SEBI पंजीकृत निवेश सलाहकार",
   "sebi": {
     "registration_no": "पंजीकरण संख्या:",
     "registered_name": "पंजीकृत नाम:",
