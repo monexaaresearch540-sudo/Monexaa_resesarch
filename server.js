@@ -4,7 +4,6 @@ const bodyParser = require('body-parser');
 const https = require('https');
 const admin = require('firebase-admin');
 require('dotenv').config();
-cls
 const app = express();
 const PORT = process.env.PORT || 5000;
 
