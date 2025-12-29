@@ -30,7 +30,7 @@ const req = http.request(options, (res) => {
   let responseBody = '';
   
   res.on('data', (chunk) => {
-    responseBody += chunk;
+    responseBody += chunk;            
   });
   
   res.on('end', () => {
