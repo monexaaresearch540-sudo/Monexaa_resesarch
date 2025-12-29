@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const https = require('https');
 const admin = require('firebase-admin');
 require('dotenv').config();
+const rateLimiter = require('./rateLimiter');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
@@ -50,9 +51,18 @@ const corsOptions = {
   optionsSuccessStatus: 200
 };
 
+
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+// Apply rate limiter to all POST requests (including contact form)
+app.use('/api/', (req, res, next) => {
+    if (req.method === 'POST') {
+        return rateLimiter(req, res, next);
+    }
+    next();
+});
 
 // Client Information Form API
 app.post('/api/client-information', async (req, res) => {
