@@ -1,12 +1,34 @@
+/* Security headers middleware is moved below where `app` is initialized */
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const https = require('https');
 const admin = require('firebase-admin');
-require('dotenv').config();
+const path = require('path');
+// Load env from server folder or root folder
+require('dotenv').config({ path: path.resolve(__dirname, '../.env') });
+require('dotenv').config(); // also check local .env if exists
 
+const rateLimiter = require('./rateLimiter');
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+console.log("RECAPTCHA_SECRET on server:", process.env.RECAPTCHA_SECRET);
+
+// Security headers middleware
+app.use((req, res, next) => {
+    // Content Security Policy (CSP)
+    res.setHeader('Content-Security-Policy', "default-src 'self' https://www.googletagmanager.com https://www.google-analytics.com https://www.gstatic.com https://www.google.com; img-src 'self' data: https://www.googletagmanager.com https://www.google-analytics.com https://www.gstatic.com https://www.google.com; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://www.gstatic.com https://www.google.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://www.google-analytics.com https://www.googletagmanager.com https://www.google.com");
+    // HTTP Strict Transport Security (HSTS)
+    res.setHeader('Strict-Transport-Security', 'max-age=63072000; includeSubDomains; preload');
+    // X-Frame-Options (Clickjacking protection)
+    res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+    // X-Content-Type-Options (MIME sniffing protection)
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+    // Referrer Policy
+    res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+    next();
+});
 
 // Initialize Firebase Admin
 try {
@@ -51,9 +73,19 @@ const corsOptions = {
   optionsSuccessStatus: 200
 };
 
+
 app.use(cors(corsOptions));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+// Use express.json() instead of bodyParser.json()
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Apply rate limiter to all POST requests (including contact form)
+app.use('/api/', (req, res, next) => {
+    if (req.method === 'POST') {
+        return rateLimiter(req, res, next);
+    }
+    next();
+});
 
 // Client Information Form API
 app.post('/api/client-information', async (req, res) => {
@@ -330,4 +362,83 @@ app.get('/api/health', (req, res) => {
 
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
+});
+
+// Contact form submission with reCAPTCHA verification
+app.post('/api/submit-contact', async (req, res) => {
+    try {
+        const { fullName, mobile, email, serviceType, message, agreeToTerms, website, recaptchaToken } = req.body;
+
+        // Honeypot
+        if (website && website.trim() !== '') {
+            return res.status(400).json({ success: false, message: 'Bot detected' });
+        }
+
+        // Basic validation (server-side)
+        if (!fullName || !mobile || !email || !serviceType || !agreeToTerms) {
+            return res.status(400).json({ success: false, message: 'Missing required fields' });
+        }
+        if (!/^[6-9]\d{9}$/.test(mobile)) {
+            return res.status(400).json({ success: false, message: 'Invalid mobile number' });
+        }
+
+        // Verify reCAPTCHA
+        const secret = process.env.RECAPTCHA_SECRET;
+        if (!secret) {
+            console.warn('RECAPTCHA_SECRET not configured; rejecting submission');
+            return res.status(500).json({ success: false, message: 'Server misconfiguration' });
+        }
+
+        // For local testing, if secret is placeholder, skip verification
+        if (secret === 'TEST_SECRET_DISABLE_VERIFICATION') {
+            console.warn('reCAPTCHA verification skipped for local testing');
+        } else {
+            if (!recaptchaToken) {
+                return res.status(400).json({ success: false, message: 'Missing reCAPTCHA token' });
+            }
+
+            const verificationUrl = `https://www.google.com/recaptcha/api/siteverify?secret=${encodeURIComponent(secret)}&response=${encodeURIComponent(recaptchaToken)}`;
+
+            const verification = await new Promise((resolve, reject) => {
+                const httpsReq = https.request(verificationUrl, { method: 'POST' }, (verRes) => {
+                    let data = '';
+                    verRes.on('data', (chunk) => data += chunk);
+                    verRes.on('end', () => {
+                        try {
+                            resolve(JSON.parse(data));
+                        } catch (e) {
+                            reject(e);
+                        }
+                    });
+                });
+                httpsReq.on('error', reject);
+                httpsReq.end();
+            });
+
+            if (!verification.success || (verification.score && verification.score < 0.4)) {
+                return res.status(403).json({ success: false, message: 'reCAPTCHA verification failed' });
+            }
+        }
+
+        // Generate a transaction id for tracking
+        const transactionId = `tx-${Date.now()}-${Math.random().toString(36).slice(2,9)}`;
+
+        // Save to Firebase (server-side) if admin initialized
+        if (admin.apps.length > 0) {
+            try {
+                const db = admin.database();
+                const submissionsRef = db.ref('contact_inquiries');
+                await submissionsRef.push({ fullName, mobile, email, serviceType, message, agreeToTerms, submittedAt: new Date().toISOString(), source: 'Contact Us Page (server)', transactionId });
+            } catch (err) {
+                console.error('Error saving contact submission to Firebase:', err.message || err);
+            }
+        } else {
+            console.warn('Firebase Admin not initialized; contact not saved to server DB');
+        }
+
+        return res.status(200).json({ success: true, message: 'Submission received', transactionId });
+    } catch (error) {
+        console.error('Error in /api/submit-contact:', error);
+        return res.status(500).json({ success: false, message: 'Internal server error' });
+    }
 });
