@@ -1,7 +1,6 @@
 /* Security headers middleware is moved below where `app` is initialized */
 const express = require('express');
 const cors = require('cors');
-const bodyParser = require('body-parser');
 const https = require('https');
 const admin = require('firebase-admin');
 const path = require('path');
@@ -358,6 +357,47 @@ app.get('/api/digio/document/:documentId', async (req, res) => {
 // Health check endpoint
 app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', message: 'Server is running' });
+});
+
+// Proxy endpoint for news (server-side fetch to mediastack)
+app.get('/api/news', async (req, res) => {
+    try {
+        const mediastackKey = process.env.MEDIASTACK_KEY;
+        if (!mediastackKey) {
+            return res.status(500).json({ success: false, message: 'Server missing MEDIASTACK_KEY' });
+        }
+
+        // Build mediastack URL with allowed query params
+        const allowed = ['categories', 'languages', 'limit', 'sort'];
+        const params = new URLSearchParams();
+        params.set('access_key', mediastackKey);
+        allowed.forEach((k) => {
+            if (req.query[k]) params.set(k, req.query[k]);
+        });
+
+        const apiUrl = `https://api.mediastack.com/v1/news?${params.toString()}`;
+
+        const https = require('https');
+        const apiResponse = await new Promise((resolve, reject) => {
+            https.get(apiUrl, (apiRes) => {
+                let data = '';
+                apiRes.on('data', (chunk) => (data += chunk));
+                apiRes.on('end', () => {
+                    try {
+                        const json = JSON.parse(data);
+                        resolve({ statusCode: apiRes.statusCode, data: json });
+                    } catch (err) {
+                        reject(new Error('Failed to parse mediastack response'));
+                    }
+                });
+            }).on('error', (err) => reject(err));
+        });
+
+        res.status(apiResponse.statusCode || 200).json(apiResponse.data);
+    } catch (error) {
+        console.error('Error proxying /api/news:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch news' });
+    }
 });
 
 app.listen(PORT, () => {
